@@ -5,8 +5,7 @@ ________________________________________
 •	Windows system (Windows 10/11, Server 2016+)
 •	Splunk Enterprise or Splunk Cloud receiver ready (indexer IP/hostname and port)
 •	Administrator privileges on the Windows machine
-•	Splunk Universal Forwarder downloaded: Download Here
-________________________________________
+•	Splunk Universal Forwarder downloaded: 
 ⚙️ Step-by-Step Setup
 ✅ Step 1: Install the Splunk Universal Forwarder
 1.	Download the appropriate .msi installer for Windows.
