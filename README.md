@@ -1,94 +1,79 @@
 # -Windows-Log-Forwarding-to-Splunk-via-Splunk-Universal-Forwarder
-This guide explains how to install and configure the Splunk Universal Forwarder on a Windows system to forward logs (Event Logs, Security Logs, Application Logs, etc.) to a Splunk Enterprise or Splunk Cloud instance.
-________________________________________
-📦 Prerequisites
-•	Windows system (Windows 10/11, Server 2016+)
-•	Splunk Enterprise or Splunk Cloud receiver ready (indexer IP/hostname and port)
-•	Administrator privileges on the Windows machine
-•	Splunk Universal Forwarder downloaded: 
-⚙️ Step-by-Step Setup
-✅ Step 1: Install the Splunk Universal Forwarder
-1.	Download the appropriate .msi installer for Windows.
-2.	Run the installer as Administrator.
-3.	Choose the installation path or keep the default.
-4.	Configure:
-o	Splunk Admin credentials
-o	Forwarding receiver information (indexer IP & receiving port, typically 9997)
-o	Select the logs you want to monitor (or skip to configure manually)
-________________________________________
-📁 Step 2: Add Windows Inputs for Log Forwarding
-You can do this either via the GUI during install or by editing the inputs.conf file:
-Location:
-perl
-CopyEdit
-C:\Program Files\SplunkUniversalForwarder\etc\system\local\inputs.conf
-Sample Configuration:
+Author: Shaikh Salman 
+Role: SOC Analyst Trainee | Cybersecurity Enthusiast
+
+📌 Project Overview
+This project outlines the process of forwarding Windows Security Event Logs using Splunk Universal Forwarder (UF) to a centralized Splunk Enterprise Server, enabling real-time threat detection and log analysis.
+
+Developed as part of a hands-on SOC Analyst training task, the project emphasizes building a reliable pipeline to capture and monitor critical security events such as logon attempts, login failures, and privilege escalations (EventCodes 4624, 4625, 4672, etc.).
+
+🚀 Key Features
+✅ Real-time forwarding of Windows Security logs via Splunk UF
+✅ Continuous monitoring of WinEventLog:Security
+✅ Detection of successful/failed logins and administrative privilege use
+✅ Custom configuration using inputs.conf and outputs.conf
+✅ Verified setup through real-time Splunk search queries
+✅ SEO-friendly formatting for visibility and learning exposure
+
+🧰 Tools & Technologies
+🟦 Splunk Universal Forwarder (Windows)
+🟧 Splunk Enterprise Server (Indexer)
+🪟 Windows 10 / 11
+🔐 Log Source: WinEventLog:Security
+⚙️ Network Port: TCP 9997
+📁 Configuration Files: inputs.conf, outputs.conf
+
+📖 Step-by-Step Implementation
+
+1. Install Splunk Universal Forwarder on Windows
+→ Download from the official Splunk Downloads page.
+
+2. Configure inputs.conf
+
 ini
-CopyEdit
-[default]
-host = YOUR-WINDOWS-HOSTNAME
+Copy
+Edit
+[WinEventLog://Security]  
+disabled = 0  
+index = wineventlog  
+3. Configure outputs.conf
 
-[WinEventLog:Application]
-disabled = 0
-
-[WinEventLog:Security]
-disabled = 0
-
-[WinEventLog:System]
-disabled = 0
-________________________________________
-🌐 Step 3: Configure Forwarding to Splunk Indexer
-Location:
-perl
-CopyEdit
-C:\Program Files\SplunkUniversalForwarder\etc\system\local\outputs.conf
-Sample Configuration:
 ini
-CopyEdit
-[tcpout]
-defaultGroup = default-autolb-group
+Copy
+Edit
+[tcpout]  
+defaultGroup = default-autolb-group  
 
-[tcpout:default-autolb-group]
-server = YOUR-SPLUNK-INDEXER-IP:9997
+[tcpout:default-autolb-group]  
+server = <Your_Indexer_IP>:9997  
+4. Enable Receiving on Splunk Enterprise Server
+→ Go to Settings > Forwarding and Receiving > Configure Receiving
+→ Enable listening on Port 9997
 
-[tcpout-server://YOUR-SPLUNK-INDEXER-IP:9997]
-________________________________________
-🔐 Step 4: Enable Splunk to Receive Logs
-On your Splunk Indexer, go to:
-Settings → Forwarding and receiving → Configure receiving → Add new
-•	Enter port 9997
-•	Save and restart Splunk if needed
-________________________________________
-🚀 Step 5: Start the Universal Forwarder
-Open PowerShell as Administrator:
-powershell
-CopyEdit
-& "C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe" start
-(Optional: set Splunk to start on boot)
-powershell
-CopyEdit
-& "C:\Program Files\SplunkUniversalForwarder\bin\splunk.exe" enable boot-start
-________________________________________
-📊 Step 6: Verify in Splunk
-In the Splunk search bar:
+5. Restart the Splunk Universal Forwarder
+
+bash
+Copy
+Edit
+splunk restart  
+✅ Validation Search Query in Splunk
+
 spl
-CopyEdit
-index=* host="YOUR-WINDOWS-HOSTNAME"
-You should start seeing logs from your Windows machine.
-________________________________________
-📎 Useful References
-•	📚 Splunk Docs: Universal Forwarder Manual
-•	🔒 Best Practices: Always secure communication with TLS in production environments
-•	📂 Logs Location (for troubleshooting):
-o	Splunk UF logs: C:\Program Files\SplunkUniversalForwarder\var\log\splunk\
-________________________________________
-🛡️ Security Note
-For production, it is recommended to:
-•	Enable SSL on the forwarder and receiver
-•	Restrict access via firewall
-•	Monitor UF status regularly using Deployment Server or health dashboards
-________________________________________
+Copy
+Edit
+host="DESKTOP-IRBHD8G" sourcetype="WinEventLog:Security"
+📊 Results
+Successfully indexed 20,000+ Windows Security Events, including:
 
-Author : Shaikh Salman Kaleem 
-📧 384shaikhsalman@gmail.com
-Cybersecurity & SOC Analyst Trainee
+🔓 EventCode 4624 – Successful Logon
+
+❌ EventCode 4625 – Failed Logon Attempt
+
+⚠️ EventCode 4672 – Privileged Account Logon
+
+✍️ Author : Shaikh Salman 
+384shaikhsalman@gmail.com
+Cybersecurity Enthusiast & SOC Analyst Trainee
+
+🧠 #Tags
+splunk universal forwarder, windows event logs, eventcode 4624, soc analyst project, log forwarding, inputs.conf, outputs.conf, tcp port 9997, splunk enterprise, siem project, real-time log collection, log monitoring, security log forwarder, windows splunk configuration, cybersecurity internship project, splunk data ingestion
